@@ -1,0 +1,46 @@
+// DAX measures for the sales report. To add one in Power BI Desktop:
+// select the fact_sales table → Modeling → New measure, paste one measure (name = formula), press Enter.
+// Keep all measures in the fact_sales table.
+
+// ---------- Basics ----------
+Revenue = SUM ( fact_sales[revenue] )
+
+Orders = DISTINCTCOUNT ( fact_sales[order_id] )
+
+Units Sold = SUM ( fact_sales[quantity] )
+
+Avg Order Value = DIVIDE ( [Revenue], [Orders] )
+
+Buying Customers = DISTINCTCOUNT ( fact_sales[customer_id] )
+
+Revenue per Customer = DIVIDE ( [Revenue], [Buying Customers] )
+
+// ---------- Time intelligence (dim_date must be marked as a date table) ----------
+Revenue Prev Month = CALCULATE ( [Revenue], DATEADD ( dim_date[date], -1, MONTH ) )
+
+MoM % = DIVIDE ( [Revenue] - [Revenue Prev Month], [Revenue Prev Month] )
+
+Revenue YTD = TOTALYTD ( [Revenue], dim_date[date] )
+
+7-Day Avg = AVERAGEX ( DATESINPERIOD ( dim_date[date], MAX ( dim_date[date] ), -7, DAY ), [Revenue] )
+
+// ---------- Products ----------
+Revenue Share % = DIVIDE ( [Revenue], CALCULATE ( [Revenue], ALL ( dim_product ) ) )
+
+Product Rank = RANKX ( ALL ( dim_product[product] ), [Revenue], , DESC, DENSE )
+
+// ---------- Customers ----------
+// 12+ orders is roughly the top third of buying customers in this data set
+Loyal Customers (12+ orders) =
+COUNTROWS (
+    FILTER (
+        VALUES ( fact_sales[customer_id] ),
+        CALCULATE ( DISTINCTCOUNT ( fact_sales[order_id] ) ) >= 12
+    )
+)
+
+Weekend Revenue % =
+DIVIDE (
+    CALCULATE ( [Revenue], dim_date[is_weekend] = TRUE () ),
+    [Revenue]
+)
