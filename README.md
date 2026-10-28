@@ -18,7 +18,7 @@ A Power BI sales report for my online coffee shop [flask-sql-shop](https://githu
 
 ## Insights
 - **Accessories bring 57.7% of revenue**, and one product, the **hand coffee grinder, makes 30.5% on its own**. It is also the product with the lowest stock (5 left), so it is the first candidate for restocking.
-- **Revenue grew month after month** from 298 zł in January to a peak of **20,930 zł in August 2026**. October only contains two test orders, which is why MoM % drops there.
+- **Revenue climbed from 298 zł in January to a peak of 20,930 zł in August 2026**, with a small dip in July (16,334 zł after 16,999 zł in June). September eased off to 15,418 zł, and October holds only two test orders, which is why MoM % drops there.
 - **Sunday is the best day** (16,862 zł) and **Monday the weakest** (8,716 zł). The weekend brings 33.4% of revenue, more than its 2/7 share of the week.
 - **Customers come back**: 14 of 42 buying customers placed 12 or more orders, and the cohort matrix shows that customers keep ordering in the months after their first purchase.
 
