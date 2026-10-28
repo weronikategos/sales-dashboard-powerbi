@@ -20,14 +20,14 @@ You need **Power BI Desktop** (free, Windows only): Microsoft Store → search f
 
 ## 3. Measures
 Add every measure from [`measures.dax`](../measures.dax) to `fact_sales` (**New measure**). Formatting:
-- `Revenue`, `Avg Order Value`, `Revenue per Customer`, `Revenue Prev Month`, `Revenue YTD`, `7-Day Avg`: **Currency** (PLN), 2 decimals
+- `Total Revenue`, `Avg Order Value`, `Revenue per Customer`, `Revenue Prev Month`, `Revenue YTD`, `7-Day Avg`: **Currency** (PLN), 2 decimals
 - `MoM %`, `Revenue Share %`, `Weekend Revenue %`: **Percentage**, 1 decimal
 
 ## 4. Page "Overview"
 | Visual | Fields |
 |---|---|
-| 4 × **Card** | `Revenue`, `Orders`, `Avg Order Value`, `Buying Customers` |
-| **Line and clustered column chart** | X-axis: `dim_date[year_month]`; columns: `Revenue`; line: `MoM %` |
+| 4 × **Card** | `Total Revenue`, `Orders`, `Avg Order Value`, `Buying Customers` |
+| **Line and clustered column chart** | X-axis: `dim_date[year_month]`; columns: `Total Revenue`; line: `MoM %` |
 | **Line chart** | X-axis: `dim_date[date]`; values: `7-Day Avg` |
 | **Slicer** | `dim_product[category]` |
 | **Slicer** | `dim_date[month_name]` |
@@ -35,16 +35,16 @@ Add every measure from [`measures.dax`](../measures.dax) to `fact_sales` (**New 
 ## 5. Page "Products"
 | Visual | Fields |
 |---|---|
-| **Donut chart** | legend: `dim_product[category]`; values: `Revenue` |
-| **Table** | `dim_product[product]`, `Product Rank`, `Revenue`, `Units Sold`, `Revenue Share %`, `dim_product[stock]` (conditional formatting: red background when stock < 10) |
-| **Bar chart** | Y-axis: `dim_product[product]`; values: `Revenue`; filter **Top N = 5** by `Revenue` |
+| **Donut chart** | legend: `dim_product[category]`; values: `Total Revenue` |
+| **Table** | `dim_product[product]`, `Product Rank`, `Total Revenue`, `Units Sold`, `Revenue Share %`, `dim_product[stock]` (conditional formatting: red background when stock < 10) |
+| **Bar chart** | Y-axis: `dim_product[product]`; values: `Total Revenue`; filter **Top N = 5** by `Total Revenue` |
 
 ## 6. Page "Customers"
 | Visual | Fields |
 |---|---|
 | 3 × **Card** | `Revenue per Customer`, `Loyal Customers (12+ orders)`, `Weekend Revenue %` |
-| **Column chart** | X-axis: `dim_date[weekday_name]`; values: `Revenue` |
-| **Table** | `dim_customer[customer]`, `dim_customer[signup_date]`, `dim_customer[orders_count]`, `Revenue` (sorted descending) |
+| **Column chart** | X-axis: `dim_date[weekday_name]`; values: `Total Revenue` |
+| **Table** | `dim_customer[customer]`, `dim_customer[signup_date]`, `dim_customer[orders_count]`, `Total Revenue` (sorted descending) |
 | **Matrix** (cohorts) | rows: `dim_customer[first_order_month]`; columns: `dim_date[year_month]`; values: `Buying Customers` |
 
 ## 7. Save and share
