@@ -1,0 +1,149 @@
+table fact_sales
+	lineageTag: d3bd1e5d-fab5-4d0d-8e93-ce48de9f0a4e
+
+	measure 'Total Revenue' = SUM ( fact_sales[revenue] )
+		formatString: #,0.00 "zł"
+		lineageTag: 326b9b58-b121-4ef9-ae13-3769290153e8
+
+	measure Orders = DISTINCTCOUNT ( fact_sales[order_id] )
+		formatString: 0
+		lineageTag: 7ef6ab32-2683-4e46-8b84-0699368f4be7
+
+	measure 'Units Sold' = SUM ( fact_sales[quantity] )
+		formatString: 0
+		lineageTag: bce309e9-6116-4e29-8ad2-642d0d0e9dd9
+
+	measure 'Avg Order Value' = DIVIDE ( [Total Revenue], [Orders] )
+		formatString: #,0.00 "zł"
+		lineageTag: d8d20890-d791-4139-beeb-3eb37850a683
+
+	measure 'Buying Customers' = DISTINCTCOUNT ( fact_sales[customer_id] )
+		formatString: 0
+		lineageTag: ae43d031-a20e-4c49-9fbd-a83fb80f398b
+
+	measure 'Revenue per Customer' = DIVIDE ( [Total Revenue], [Buying Customers] )
+		formatString: #,0.00 "zł"
+		lineageTag: f2b0a1df-2033-4cc7-9805-67a928e091bb
+
+	measure 'Revenue Prev Month' = CALCULATE ( [Total Revenue], DATEADD ( dim_date[date], -1, MONTH ) )
+		formatString: #,0.00 "zł"
+		lineageTag: e4918f3c-5952-4e35-8c2f-16f75add1208
+
+	measure 'MoM %' = DIVIDE ( [Total Revenue] - [Revenue Prev Month], [Revenue Prev Month] )
+		formatString: 0.0%
+		lineageTag: 1e3efa68-8ddb-47e1-8b5a-2114a7164283
+
+	measure 'Revenue YTD' = TOTALYTD ( [Total Revenue], dim_date[date] )
+		formatString: #,0.00 "zł"
+		lineageTag: 9591791a-e265-4033-a8a7-964c209dc9d6
+
+	measure '7-Day Avg' = AVERAGEX ( DATESINPERIOD ( dim_date[date], MAX ( dim_date[date] ), -7, DAY ), [Total Revenue] )
+		formatString: #,0.00 "zł"
+		lineageTag: 41f1d911-9df9-4f45-bbc6-623a7b4c7163
+
+	measure 'Revenue Share %' = DIVIDE ( [Total Revenue], CALCULATE ( [Total Revenue], ALL ( dim_product ) ) )
+		formatString: 0.0%
+		lineageTag: d3334328-eef6-4678-99c3-55f599f9a77b
+
+	measure 'Product Rank' = RANKX ( ALL ( dim_product[product] ), [Total Revenue], , DESC, DENSE )
+		formatString: 0
+		lineageTag: 2926fb38-9c02-4bf2-924d-11c7bd5fe1cb
+
+	measure 'Loyal Customers (12+ orders)' =
+			COUNTROWS (
+			    FILTER (
+			        VALUES ( fact_sales[customer_id] ),
+			        CALCULATE ( DISTINCTCOUNT ( fact_sales[order_id] ) ) >= 12
+			    )
+			)
+		formatString: 0
+		lineageTag: 2b6210ef-b6bf-4f42-9963-f786ec42793b
+
+	measure 'Weekend Revenue %' =
+			DIVIDE (
+			    CALCULATE ( [Total Revenue], dim_date[is_weekend] = TRUE () ),
+			    [Total Revenue]
+			)
+		formatString: 0.0%
+		lineageTag: c9eb914b-0b24-48ed-91df-dc343bedd7d1
+
+	column order_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 451abddd-8a16-4449-acc9-9395dfe07f86
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: d7575a67-7afa-4f5a-b878-35cfc5fdedb6
+		summarizeBy: none
+		sourceColumn: order_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column customer_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a7c04324-c09a-40cd-bea9-fa4cb1438046
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: ccef66f6-7c84-4ebe-b7a4-337c24b47d9e
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 10460839-c0ad-4b15-9cfd-7d54e9c1541a
+		summarizeBy: sum
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_price
+		dataType: double
+		formatString: #,0.00 "zł"
+		lineageTag: db48dbcd-cd94-4051-b395-b02ff554a172
+		summarizeBy: none
+		sourceColumn: unit_price
+
+		annotation SummarizationSetBy = Automatic
+
+	column revenue
+		dataType: double
+		formatString: #,0.00 "zł"
+		lineageTag: 4177c27e-e481-4bc8-967c-803b31dae9f7
+		summarizeBy: sum
+		sourceColumn: revenue
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_sales = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "fact_sales.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"order_id", Int64.Type}, {"order_date", type date}, {"customer_id", Int64.Type}, {"product_id", Int64.Type}, {"quantity", Int64.Type}, {"unit_price", type number}, {"revenue", type number}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

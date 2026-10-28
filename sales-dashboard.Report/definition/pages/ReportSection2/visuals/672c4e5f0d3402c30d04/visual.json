@@ -1,0 +1,121 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "672c4e5f0d3402c30d04",
+  "position": {
+    "x": 596.91452118125937,
+    "y": 321.0988458768154,
+    "z": 5,
+    "height": 359.52092999882746,
+    "width": 662.78095110470861,
+    "tabOrder": 5
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Columns": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "year_month"
+                }
+              },
+              "queryRef": "dim_date.year_month",
+              "nativeQueryRef": "year_month",
+              "active": true
+            }
+          ]
+        },
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_customer"
+                    }
+                  },
+                  "Property": "first_order_month"
+                }
+              },
+              "queryRef": "dim_customer.first_order_month",
+              "nativeQueryRef": "first_order_month",
+              "active": true
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_sales"
+                    }
+                  },
+                  "Property": "Buying Customers"
+                }
+              },
+              "queryRef": "fact_sales.Buying Customers",
+              "nativeQueryRef": "Buying Customers"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "3695c0629195b4c275a5",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_customer"
+              }
+            },
+            "Property": "first_order_month"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "139b6d2d416050712671",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_date"
+              }
+            },
+            "Property": "year_month"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "f8e1ef625103045d4e31",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_sales"
+              }
+            },
+            "Property": "Buying Customers"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

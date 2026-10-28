@@ -1,0 +1,58 @@
+table dim_product
+	lineageTag: 66bacb00-26a0-4b3d-9cd2-53dff2e4424d
+
+	column product_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e9cf63e4-ef0e-4e89-abca-bb3cbfefca1c
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product
+		dataType: string
+		lineageTag: 6ecea6ce-edf2-4f68-99d9-5f0ada3bde92
+		summarizeBy: none
+		sourceColumn: product
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		lineageTag: 4733264d-405c-4ab2-b6f5-b53f092a05d9
+		summarizeBy: none
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column list_price
+		dataType: double
+		formatString: #,0.00 "zł"
+		lineageTag: 33e8db25-a773-4bbf-af58-b06fca2001f3
+		summarizeBy: none
+		sourceColumn: list_price
+
+		annotation SummarizationSetBy = Automatic
+
+	column stock
+		dataType: int64
+		formatString: 0
+		lineageTag: 65e236ee-7075-4c35-9867-c740b0d31af2
+		summarizeBy: sum
+		sourceColumn: stock
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_product = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_product.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"product_id", Int64.Type}, {"product", type text}, {"category", type text}, {"list_price", type number}, {"stock", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

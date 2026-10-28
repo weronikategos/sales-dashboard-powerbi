@@ -1,0 +1,5 @@
+expression DataFolder = "C:\Users\weron\OneDrive\Pulpit\portfolio\sales-dashboard-powerbi\data\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 1d97dc4b-dd9a-4ac1-a32c-4cfb794a1651
+
+	annotation PBI_ResultType = Text
+

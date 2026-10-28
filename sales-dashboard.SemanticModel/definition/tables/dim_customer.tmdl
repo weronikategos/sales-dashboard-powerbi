@@ -1,0 +1,60 @@
+table dim_customer
+	lineageTag: 009d28b1-b90f-483e-b8e3-01193e919969
+
+	column customer_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 327e6f29-259c-4ba2-b403-d23ba2c18ab1
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer
+		dataType: string
+		lineageTag: ed6ad791-0165-418e-82b1-0232445a19f3
+		summarizeBy: none
+		sourceColumn: customer
+
+		annotation SummarizationSetBy = Automatic
+
+	column signup_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 439c6761-af2d-4099-bbd2-6308fa48f1a4
+		summarizeBy: none
+		sourceColumn: signup_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column first_order_month
+		dataType: string
+		lineageTag: b3f93d1f-d90d-4261-bd92-4f28072bc62f
+		summarizeBy: none
+		sourceColumn: first_order_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column orders_count
+		dataType: int64
+		formatString: 0
+		lineageTag: c03901fe-7d31-4c0f-8d01-a9a95424a831
+		summarizeBy: sum
+		sourceColumn: orders_count
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_customer = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_customer.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"customer_id", Int64.Type}, {"customer", type text}, {"signup_date", type date}, {"first_order_month", type text}, {"orders_count", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

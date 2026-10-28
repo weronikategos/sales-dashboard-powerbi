@@ -1,0 +1,166 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "9f1e6bebe7d16ed5d91c",
+  "position": {
+    "x": 300.51558652573749,
+    "y": 321.0988458768154,
+    "z": 4,
+    "height": 359.52092999882746,
+    "width": 296.39893465552188,
+    "tabOrder": 4
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_customer"
+                    }
+                  },
+                  "Property": "customer"
+                }
+              },
+              "queryRef": "dim_customer.customer",
+              "nativeQueryRef": "customer"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_customer"
+                    }
+                  },
+                  "Property": "signup_date"
+                }
+              },
+              "queryRef": "dim_customer.signup_date",
+              "nativeQueryRef": "signup_date"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "dim_customer"
+                        }
+                      },
+                      "Property": "orders_count"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(dim_customer.orders_count)",
+              "nativeQueryRef": "orders_count"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_sales"
+                    }
+                  },
+                  "Property": "Total Revenue"
+                }
+              },
+              "queryRef": "fact_sales.Total Revenue",
+              "nativeQueryRef": "Total Revenue"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_sales"
+                  }
+                },
+                "Property": "Total Revenue"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "4473b1d36c1b2c69d06b",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_customer"
+              }
+            },
+            "Property": "customer"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "07e4c1e2a70dc7e3633a",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_customer"
+              }
+            },
+            "Property": "signup_date"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "3c5e3b6de703b0709eaa",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "dim_customer"
+                  }
+                },
+                "Property": "orders_count"
+              }
+            },
+            "Function": 0
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "8c7aeebd4ee2847dc7d8",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_sales"
+              }
+            },
+            "Property": "Total Revenue"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}
