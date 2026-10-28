@@ -45,6 +45,7 @@ All 14 measures are in [`measures.dax`](measures.dax):
 | Path | What it is |
 |---|---|
 | `sales-dashboard.pbix` | the report, opens in Power BI Desktop |
+| [`sales-dashboard.pdf`](sales-dashboard.pdf) | PDF of the report pages, viewable without Power BI |
 | `sales-dashboard.pbip` + `sales-dashboard.Report/`, `sales-dashboard.SemanticModel/` | the same report as a Power BI Project (text files: TMDL model and PBIR report), so changes are readable in git |
 | `export_data.py` | exports the shop database to the CSV files in `data/` |
 | `tests/` | pytest tests for the exporter |
